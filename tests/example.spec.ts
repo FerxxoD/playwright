@@ -17,14 +17,15 @@ test('get started link', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
 });
 
-test('push button start', async ({page}) => {
+test('push button start', async ({ page }) => {
   await page.goto('https://www.mercadolibre.com.co/')
   await page.locator('#cb1-edit').fill('iphone')
   await page.keyboard.press('Enter')
 
-  await expect(page.locator('//ol[contains(@class,\'ui-search-layout\')]')).toBeVisible()
+  await page.waitForURL('**listado.mercadolibre.com.co/**', { timeout: 15000 })
+  await expect(page.locator('ol.ui-search-layout')).toBeVisible({ timeout: 15000 })
   //await page.pause()
-  const titles = await page.locator('//ol[contains(@class,\'ui-search-layout\')]//li//h3').allTextContents()
+  const titles = await page.locator('ol.ui-search-layout li h3').allTextContents()
   for (let title of titles) {
     console.log('Title is:', title)
   }
