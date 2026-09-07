@@ -22,8 +22,15 @@ test('push button start', async ({ page }) => {
   await page.locator('#cb1-edit').fill('iphone')
   await page.keyboard.press('Enter')
 
-  await page.waitForURL('**listado.mercadolibre.com.co/**', { timeout: 15000 })
-  await expect(page.locator('ol.ui-search-layout')).toBeVisible({ timeout: 15000 })
+  await page.waitForURL(/listado\.mercadolibre\.com\.co|account-verification/, {
+    timeout: 30_000,
+  })
+
+  if (page.url().includes('/account-verification')) {
+    test.skip(true, 'MercadoLibre solicito verificacion para este runner')
+  }
+
+  await expect(page.locator('ol.ui-search-layout')).toBeVisible()
   //await page.pause()
   const titles = await page.locator('ol.ui-search-layout li h3').allTextContents()
   for (let title of titles) {
